@@ -5,6 +5,7 @@ class App {
   public static $output = '';
   public static $input = '';
   public static $d = 1;
+  public static $json = 0;
   public static function  perform(){
     if (isset($_GET['n']) && isset($_GET['direction']) 
           && $_GET['direction'] == '1'){
@@ -27,7 +28,7 @@ class App {
       }
     }
     if (isset($_GET['json'])){
-      
+      App::$json = 1;
       echo json_encode(self::$output);
     }
   }

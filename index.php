@@ -1,6 +1,9 @@
 <?php
 require_once 'App.php';
 App::perform();
+if (App::$json){
+  exit();
+}
 ?>
 <!doctype html>
 <html lang="en">
