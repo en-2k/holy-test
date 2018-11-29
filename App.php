@@ -27,6 +27,7 @@ class App {
       }
     }
     if (isset($_GET['json'])){
+      
       echo json_encode(self::$output);
     }
   }
