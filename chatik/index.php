@@ -197,7 +197,7 @@
     </div>
     <div class="container-right">
       <div class="container-right-top">
-        Уже почти рабочий... Йопта!
+        Уже почти рабочий... Йопта! <a href="?u=2">А что видит Трололоша?</a>
       </div>
       <div class="container-msg"></div>
       <div class="container-right-bottom">
