@@ -199,9 +199,9 @@
       <div class="container-right-top">
         Уже почти рабочий... Йопта! 
         <a href="?u=<?php 
-          echo ((isset($GET['u']) && $_GET['u']=='1')? 
+          echo ((isset($_GET['u']) && $_GET['u']=='1')? 
           '2':'1' ); ?>">А что видит <?php 
-          echo ((isset($GET['u']) && $_GET['u']=='1')? 
+          echo ((isset($_GET['u']) && $_GET['u']=='1')? 
           'Трололоша':'Ололоша' ); ?>?</a>
       </div>
       <div class="container-msg"></div>
