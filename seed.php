@@ -139,9 +139,13 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
       
     }
     $day = random_int(0,31);
+    $month = ($ids[ "'" . $id ]['month'] + 2*$ids[ "'" . $id ]['cnt']);
+    if ($month > 12){
+      $month = 1;
+    }
     $d_start = 
         "'2019"
-        . "-0" . ($ids[ "'" . $id ]['month'] + 2*$ids[ "'" . $id ]['cnt'])
+        . "-" . (($month >= 10)? "":"0") . $month
         . "-01" . "'" ;
     $d_end = "date " . $d_start . " + integer '" . random_int(0,20) . "' + integer '" . $day . "'" ;
     $d_start = "date " . $d_start . " + integer '" . $day . "'";
