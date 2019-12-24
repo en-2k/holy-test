@@ -139,7 +139,7 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
         . "-0" . random_int(1,9) 
         . "-" . random_int(10,28) . "'" ;
     $d_end = "date " . $d_start . " + integer '" . random_int(0,28) . "'" ;
-    $sql .= "INSERT INTO Vacantions(employee_id,d_start,d_end) "
+    $sql .= "INSERT INTO Vacations(employee_id,d_start,d_end) "
       . "VALUES(" 
       . "" . $id . ","
       . "" . $d_start . ","
