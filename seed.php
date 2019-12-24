@@ -76,7 +76,7 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
   $ids = [];
   $dep_len = random_int(5,count($deps));
   $sql .= "/* " . $dep_len . " */". PHP_EOL;
-  for ($i = 0; $i < $dep_len; $i++){
+  for ($i = 0,$j=0; $i < $dep_len && $j < 1000000; $i++,$j++){
     $id = random_int(0,count($deps)-1);
     if(!in_array($id, $ids)){
       $ids []= $id;
@@ -92,7 +92,7 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
   $ids = [];
   $emp_len = random_int(50,300);
   $sql .= "/* " . $emp_len . " */". PHP_EOL;
-  for ($i = 0; $i < $emp_len; $i++){
+  for ($i = 0,$j=0; $i < $emp_len && $j < 1000000; $i++,$j++){
     $mf = random_int(0,1);
     $id1 = random_int(0,count($surnames)-1);
     $id2 = random_int(0,count( (($mf === 0)? $names:$namesf) )-1);
@@ -121,23 +121,26 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
   }
 
   $ids = [];
-  $vac_len = random_int(2,4) * $emp_len;
+  $vac_each = random_int(2,4);
+  $vac_len = $vac_each * $emp_len;
   $sql .= "/* " . $vac_len . " */". PHP_EOL;
-  for ($i = 0; $i < $vac_len; $i++){
+  for ($i = 0,$j=0; $i < $vac_len && $j < 1000000; $i++,$j++){
     $id = random_int(1, $emp_len);
     if (isset($ids[ "'" . $id ])){
-      $ids[ "'" . $id ]++;
-      if ($ids[ "'" . $id ] > 4){
-        $ids[ "'" . $id ]--;
+      $ids[ "'" . $id ]['cnt']++;
+      if ($ids[ "'" . $id ]['cnt'] > $vac_each){
+        $ids[ "'" . $id ]['cnt']--;
         $i--;
         continue;
       }
     } else {
-      $ids[ "'" . $id ] = 1;
+      $month = random_int(1,5);
+      $ids[ "'" . $id ] = ['cnt' => 1, 'month' => $month];
+      
     }
     $d_start = 
         "'2019"
-        . "-0" . random_int(1,9) 
+        . "-0" . ($ids[ "'" . $id ]['month'] + $ids[ "'" . $id ]['cnt'])
         . "-" . random_int(10,28) . "'" ;
     $d_end = "date " . $d_start . " + integer '" . random_int(0,28) . "'" ;
     $sql .= "INSERT INTO Vacations(employee_id,d_start,d_end) "
