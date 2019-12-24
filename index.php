@@ -7,6 +7,8 @@
     <title>Тестове завдання</title>
   </head>
   <body>
-
+  <ul>
+  <li><a href="seed.php">Заповнити випадковими даними</a></li>
+  </ul>
   </body>
 </html>
