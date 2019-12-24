@@ -20,6 +20,47 @@ $deps = [
   'Управління соціальних програм',
   'Управління капітального будівництва',
 ];
+$surnames = [
+  'Іваненко',
+  'Бондаренко',
+  'Петренко',
+  "Дерев'янко",
+  "Сидоренко",
+  "Бут",
+  "Деркач",
+];
+$names = [
+  'Петро',
+  'Борис',
+  'Ігор',
+  'Дмитро',
+  'Олександр',
+];
+$namesf = [
+  'Ірина',
+  'Наталя',
+  'Людмила',
+  'Надія',
+  'Лариса',
+];
+$names2 = [
+  'Петрович',
+  'Миколайович',
+  'Володимирович',
+  'Олексійович',
+  'Олександрович',
+  'Ігоревич',
+  'Георгієвич',
+];
+$names2f = [
+  'Петрівна',
+  'Миколаївна',
+  'Володимирівна',
+  'Олексіївна',
+  'Олександрівна',
+  'Ігорівна',
+  'Георгіївна',
+];
 if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
   $conn = pg_connect($_ENV['DATABASE_URL']);
   if (!$conn){
@@ -32,7 +73,8 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
   }
   $sql = file_get_contents("schema.sql");
   $ids = [];
-  for ($i = 0; $i < 5; $i++){
+  $dep_len = random_int(5,count($deps));
+  for ($i = 0; $i < $dep_len; $i++){
     $id = random_int(0,count($deps)-1);
     if(!in_array($id, $ids)){
       $ids []= $id;
@@ -44,6 +86,37 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
       . "'" . str_replace("\\","\\\\",str_replace( "'", "\\'", $deps[$id] )) . "'"
       . ");" . PHP_EOL;
   }
+  
+  $ids = [];
+  $emp_len = random_int(50,300);
+  for ($i = 0; $i < $emp_len; $i++){
+    $mf = random_int(0,1);
+    $id1 = random_int(0,count($surnames)-1);
+    $id2 = random_int(0,count( (($mf === 0)? $names:$namesf) )-1);
+    $id3 = random_int(0,count( (($mf === 0)? $names2:$names2f) )-1);
+    $id = $id1 . $id2 . $id3;
+    $name = $surnames[$id1] 
+      . ' ' . (($mf === 0)? $names[$id2]:$namesf[$id2])
+      . ' ' . (($mf === 0)? $names2[$id3]:$names2f[$id3]);
+    if(!in_array($id, $ids)){
+      $ids []= $id;
+    } else {
+      $i--; continue;
+    }
+    $dep_id = random_int(1,$dep_len);
+    $fired = ((random_int(1,10) === 5)? 
+        "'201" . random_int(0,9) 
+        . "-0" . random_int(1,9) 
+        . "-" . random_int(10,28) . "'" 
+      : "NULL");
+    $sql .= "INSERT INTO Employee(name,department_id,fired) "
+      . "VALUES(" 
+      . "'" . str_replace("\\","\\\\",str_replace( "'", "\\'", $name )) . "',"
+      . "'" . $dep_id . "',"
+      . "'" . $fired . "'"
+      . ");" . PHP_EOL;
+  }
+  
   $result = pg_query($conn,$sql);
   if ($result === FALSE){
     print pg_last_error($conn);
@@ -51,6 +124,13 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
     exit;
   }
   pg_close($conn);
+?>
+Виконався запит
+<br/>
+<pre>
+<?php echo $sql; ?>
+</pre>
+<?php
 } else {
 ?>
 Ця дія видалить усі дані таблиць і заповнить випадковими даними. Перейдіть за <a href="?confirm=yes">цим посиланням</a> для підтвердження
