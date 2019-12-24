@@ -74,6 +74,7 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
   $sql = file_get_contents("schema.sql");
   $ids = [];
   $dep_len = random_int(5,count($deps));
+  $sql .= "/* " . $dep_len . " */". PHP_EOL;
   for ($i = 0; $i < $dep_len; $i++){
     $id = random_int(0,count($deps)-1);
     if(!in_array($id, $ids)){
@@ -89,6 +90,7 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
   
   $ids = [];
   $emp_len = random_int(50,300);
+  $sql .= "/* " . $emp_len . " */". PHP_EOL;
   for ($i = 0; $i < $emp_len; $i++){
     $mf = random_int(0,1);
     $id1 = random_int(0,count($surnames)-1);
@@ -115,6 +117,35 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
       . "" . $dep_id . ","
       . "" . $fired . ""
       . ");" . PHP_EOL;
+  }
+
+  $ids = [];
+  $vac_len = random_int(2,4) * $emp_len;
+  $sql .= "/* " . $vac_len . " */". PHP_EOL;
+  for ($i = 0; $i < $vac_len; $i++){
+    $id = random_int(1, $emp_len);
+    if (isset($ids[ "'" . $id ])){
+      $ids[ "'" . $id ]++;
+      if ($ids[ "'" . $id ] > 4){
+        $ids[ "'" . $id ]--;
+        $i--;
+        continue;
+      }
+    } else {
+      $ids[ "'" . $id ] = 1;
+    }
+    $d_start = 
+        "'2019"
+        . "-0" . random_int(1,9) 
+        . "-" . random_int(10,28) . "'" ;
+    $d_end = "date " . $d_start . " + integer '" . random_int(0,28) . "'" ;
+    $sql .= "INSERT INTO Vacantions(employee_id,d_start,d_end) "
+      . "VALUES(" 
+      . "" . $id . ","
+      . "" . $d_start . ","
+      . "" . $d_end . ""
+      . ");" . PHP_EOL;
+    
   }
   
   $result = pg_query($conn,$sql);
