@@ -134,15 +134,17 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
         continue;
       }
     } else {
-      $month = random_int(1,5);
+      $month = random_int(1,2);
       $ids[ "'" . $id ] = ['cnt' => 1, 'month' => $month];
       
     }
+    $day = random_int(0,31);
     $d_start = 
         "'2019"
-        . "-0" . ($ids[ "'" . $id ]['month'] + $ids[ "'" . $id ]['cnt'])
-        . "-" . random_int(10,28) . "'" ;
-    $d_end = "date " . $d_start . " + integer '" . random_int(0,28) . "'" ;
+        . "-0" . ($ids[ "'" . $id ]['month'] + 2*$ids[ "'" . $id ]['cnt'])
+        . "-01" . "'" ;
+    $d_end = "date " . $d_start . " + integer '" . random_int(0,20) . "' + integer '" . $day . "'" ;
+    $d_start = "date " . $d_start . " + integer '" . $day . "'";
     $sql .= "INSERT INTO Vacations(employee_id,d_start,d_end) "
       . "VALUES(" 
       . "" . $id . ","
