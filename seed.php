@@ -76,7 +76,7 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
   $ids = [];
   $dep_len = random_int(5,count($deps));
   $sql .= "/* " . $dep_len . " */". PHP_EOL;
-  for ($i = 0,$j=0; $i < $dep_len && $j < 1000000; $i++,$j++){
+  for ($i = 0,$j=0; $i < $dep_len && $j < 10000; $i++,$j++){
     $id = random_int(0,count($deps)-1);
     if(!in_array($id, $ids)){
       $ids []= $id;
@@ -90,9 +90,9 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
   }
   
   $ids = [];
-  $emp_len = random_int(50,300);
+  $emp_len = random_int(50,200);
   $sql .= "/* " . $emp_len . " */". PHP_EOL;
-  for ($i = 0,$j=0; $i < $emp_len && $j < 1000000; $i++,$j++){
+  for ($i = 0,$j=0; $i < $emp_len && $j < 30000; $i++,$j++){
     $mf = random_int(0,1);
     $id1 = random_int(0,count($surnames)-1);
     $id2 = random_int(0,count( (($mf === 0)? $names:$namesf) )-1);
@@ -124,7 +124,7 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
   $vac_each = random_int(2,4);
   $vac_len = $vac_each * $emp_len;
   $sql .= "/* " . $vac_len . " */". PHP_EOL;
-  for ($i = 0,$j=0; $i < $vac_len && $j < 1000000; $i++,$j++){
+  for ($i = 0,$j=0; $i < $vac_len && $j < 300000; $i++,$j++){
     $id = random_int(1, $emp_len);
     if (isset($ids[ "'" . $id ])){
       $ids[ "'" . $id ]['cnt']++;
