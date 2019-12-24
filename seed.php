@@ -41,7 +41,7 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
     }
     $sql .= "INSERT INTO Department(name) "
       . "VALUES(" 
-      . str_replace("\\","\\\\",str_replace( "'", "\\'", $deps[$id] ))
+      . "'" . str_replace("\\","\\\\",str_replace( "'", "\\'", $deps[$id] )) . "'"
       . ");" . PHP_EOL;
   }
   $result = pg_query($conn,$sql);
