@@ -112,8 +112,8 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
     $sql .= "INSERT INTO Employee(name,department_id,fired) "
       . "VALUES(" 
       . "'" . str_replace( "'", "''", $name ) . "',"
-      . "'" . $dep_id . "',"
-      . "'" . $fired . "'"
+      . "" . $dep_id . ","
+      . "" . $fired . ""
       . ");" . PHP_EOL;
   }
   
