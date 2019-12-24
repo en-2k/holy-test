@@ -83,7 +83,7 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
     }
     $sql .= "INSERT INTO Department(name) "
       . "VALUES(" 
-      . "'" . str_replace("\\","\\\\",str_replace( "'", "\\'", $deps[$id] )) . "'"
+      . "'" . str_replace("\\","\\\\",str_replace( "'", "\'", $deps[$id] )) . "'"
       . ");" . PHP_EOL;
   }
   
@@ -111,7 +111,7 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
       : "NULL");
     $sql .= "INSERT INTO Employee(name,department_id,fired) "
       . "VALUES(" 
-      . "'" . str_replace("\\","\\\\",str_replace( "'", "\\'", $name )) . "',"
+      . "'" . str_replace("\\","\\\\",str_replace( "'", "\'", $name )) . "',"
       . "'" . $dep_id . "',"
       . "'" . $fired . "'"
       . ");" . PHP_EOL;
