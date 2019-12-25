@@ -38,7 +38,7 @@
         } else if(strtoupper($_key) == "NM_2"){
           $where []= 'upper(v1.name) like upper(' . "'" . str_replace("'","''",$_val) . "')";
         } else if(strtoupper($_key) == "MIN_INTERS"){
-          $where []= '(CASE WHEN v.d_start>v1.d_start THEN v1.d_start ELSE v.d_start END)::varchar(10) like upper(' . "'" . str_replace("'","''",$_val) . "')";
+          $where []= '(CASE WHEN v.d_start>v1.d_start THEN v.d_start ELSE v1.d_start END)::varchar(10) like upper(' . "'" . str_replace("'","''",$_val) . "')";
         } else if(strtoupper($_key) == "DEPT"){
           $where []= 'upper(d.name) like upper(' . "'" . str_replace("'","''",$_val) . "')";
         }
@@ -55,8 +55,8 @@ SELECT
   d.name AS dept,
   em.name AS nm_1,
   v1.name AS nm_2, 
-  CASE WHEN v.d_start>v1.d_start THEN v1.d_start 
-  ELSE v.d_start END AS min_inters 
+  CASE WHEN v.d_start>v1.d_start THEN v.d_start 
+  ELSE v1.d_start END AS min_inters 
 FROM vacations v 
 INNER JOIN (SELECT v1.*,em.* 
             FROM vacations v1 
