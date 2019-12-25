@@ -270,6 +270,7 @@
           butt.setAttribute("data-act","INSERT");
           butt.innerText = "зберегти";
           butt.onclick = function(){
+            this.setAttribute("disabled","disabled");
             var url_params = "?";
             for(var f in filter){
               url_params += "FILTER["+f+"]="+filter[f]+"&";
