@@ -173,9 +173,9 @@
       str_replace('"',"&quot;",$_GET["FILTER"]["id"]):"")?>"/></td>
     <td><input type="text" data-act="FILTER" data-attr="name" value="<?php echo ((isset($_GET["FILTER"]) && isset($_GET["FILTER"]["name"]))? 
       str_replace('"',"&quot;",$_GET["FILTER"]["name"]):"")?>"/></td>
-    <td><input type="text" data-act="FILTER" data-attr="name" value="<?php echo ((isset($_GET["FILTER"]) && isset($_GET["FILTER"]["dept"]))? 
+    <td><input type="text" data-act="FILTER" data-attr="dept" value="<?php echo ((isset($_GET["FILTER"]) && isset($_GET["FILTER"]["dept"]))? 
       str_replace('"',"&quot;",$_GET["FILTER"]["dept"]):"")?>"/></td>
-    <td><input type="text" data-act="FILTER" data-attr="name" value="<?php echo ((isset($_GET["FILTER"]) && isset($_GET["FILTER"]["fired"]))? 
+    <td><input type="text" data-act="FILTER" data-attr="fired" value="<?php echo ((isset($_GET["FILTER"]) && isset($_GET["FILTER"]["fired"]))? 
       str_replace('"',"&quot;",$_GET["FILTER"]["fired"]):"")?>"/></td>
   </tr></thead>
   <tbody>
