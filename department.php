@@ -213,8 +213,14 @@
           butt.onclick = function(){
             var id = this.getAttribute('data-id');
             var act = this.getAttribute('data-act');
-            var url_params = "";
-            url_params = "?"+act+"=&id="+id;
+            var url_params = "?";
+            for(var f in filter){
+              url_params += "FILTER["+f+"]="+filter[f]+"&";
+            }
+            for(var s in sort){
+              url_params += "SORT["+s+"]="+sort[s];
+            }
+            url_params += "&"+act+"=&id="+id;
             var inputs = this.parentNode.parentNode.querySelectorAll('input[data-id="'+id+'"]');
             for (var k = 0; k < inputs.length; k++){
               var param = inputs[k].getAttribute('data-attr');
@@ -227,8 +233,14 @@
           this.parentNode.removeChild(this);
         }
         if (this.value === "DELETE"){
-          var url_params = "";
-          url_params = "?"+this.value+"=&id="+id;
+          var url_params = "?";
+          for(var f in filter){
+            url_params += "FILTER["+f+"]="+filter[f]+"&";
+          }
+          for(var s in sort){
+            url_params += "SORT["+s+"]="+sort[s];
+          }
+          url_params += "&"+this.value+"=&id="+id;
           if (!confirm("Точно видалити?")){
             return false;
           }
@@ -252,8 +264,14 @@
           butt.setAttribute("data-act","INSERT");
           butt.innerText = "зберегти";
           butt.onclick = function(){
-            var url_params = "";
-            url_params = "?INSERT=";
+            var url_params = "?";
+            for(var f in filter){
+              url_params += "FILTER["+f+"]="+filter[f]+"&";
+            }
+            for(var s in sort){
+              url_params += "SORT["+s+"]="+sort[s];
+            }
+            url_params += "&INSERT=";
             var inputs = this.parentNode.parentNode.querySelectorAll('input[data-act="INSERT"]');
             for (var k = 0; k < inputs.length; k++){
               var param = inputs[k].getAttribute('data-attr');
