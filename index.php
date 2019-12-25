@@ -7,6 +7,7 @@
     <title>Тестове завдання</title>
   </head>
   <body>
+  <p>Завдання і вихідний код тут - <a href="https://github.com/en-2k/holy-test">https://github.com/en-2k/holy-test</a></p>
   <ul>
   <li><a href="seed.php">Заповнити випадковими даними</a></li>
   <li><a href="department.php">Підрозділи</a></li>
@@ -15,5 +16,6 @@
   <li><a href="intersects.php">Періоди відпусток пар співробітників в межах одного підрозділу, що перетинаються</a></li>
   <li><a href="protocol.php">Протокол подій</a></li>
   </ul>
+  <p>Виконано без особливих зусиль за два дні</p>
   </body>
 </html>
