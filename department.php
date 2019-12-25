@@ -118,36 +118,54 @@
             tds[j].innerHTML = '<input type="text" data-id="'+id+'" data-attr="'+attr+'"  value="" />';
             tds[j].querySelector("INPUT").value = val;
           }
-        }
-        var parent = this.parentNode;
-        var butt = document.createElement('BUTTON');
-        butt.setAttribute("data-id",id);
-        butt.setAttribute("data-act",this.value);
-        butt.innerText = "зберегти";
-        butt.onclick = function(){
-          var id = this.getAttribute('data-id');
-          var act = this.getAttribute('data-act');
-          var url_params = "";
-          url_params = "?"+act+"=&id="+id;
-          if (act === "UPDATE"){
+          var parent = this.parentNode;
+          var butt = document.createElement('BUTTON');
+          butt.setAttribute("data-id",id);
+          butt.setAttribute("data-act",this.value);
+          butt.innerText = "зберегти";
+          butt.onclick = function(){
+            var id = this.getAttribute('data-id');
+            var act = this.getAttribute('data-act');
+            var url_params = "";
+            url_params = "?"+act+"=&id="+id;
             var inputs = this.parentNode.parentNode.querySelectorAll('input[data-id="'+id+'"]');
             for (var k = 0; k < inputs.length; k++){
               var param = inputs[k].getAttribute('data-attr');
               url_params += "&"+param+"="+encodeURIComponent(inputs[k].value);
             }
-          }
-          if (act === "DELETE"){
-            if (!confirm("Точно видалити?")){
-              return false;
-            }
+            return false;
+          };
+          parent.appendChild(butt);
+          this.parentNode.removeChild(this);
+        }
+        if (this.value === "DELETE"){
+          var url_params = "";
+          url_params = "?"+this.value+"=&id="+id;
+          if (!confirm("Точно видалити?")){
+            return false;
           }
           document.location = document.URL + url_params;
-          return false;
-        };
-        parent.appendChild(butt);
-        this.parentNode.removeChild(this);
+        }
       };
     }
+    document.querySelector("#INSERT").onclick = function(){
+      var html = document.querySelector("table tbody").innerHTML;
+      var trhtml = document.querySelector("table tbody tr:nth-child(1)").innerHTML;
+      var td1html = document.querySelector("table tbody tr td:nth-child(1)").innerHTML;
+      html += '<tr data-act="INSERT">'+trhtml.replace(td1.html,"")+"</tr>";
+      document.querySelector("table tbody").innerHTML = html;
+      var tds = document.querySelectorAll('tr[data-act="INSERT"] td');
+      for (var j = 1; j < tds.length; j++){
+        var attr = tds[j].getAttribute("attr");
+        if (attr == "id"){
+          tds[j].innerHTML = '';
+          continue;
+        }
+        var val = tds[j].innerHTML;
+        tds[j].innerHTML = '<input type="text" data-id="'+id+'" data-attr="'+attr+'"  value="" />';
+        tds[j].querySelector("INPUT").value = '';
+      }
+    };
   </script>
   </body>
 </html>
