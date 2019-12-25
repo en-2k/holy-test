@@ -46,7 +46,7 @@
       $where = "";
     }
   }
-  $query = "select * from protocol where true and #where# order by #orderby#";
+  $query = "select * from protocol where true #where# order by #orderby#";
   $result = pg_query($conn,str_replace("#orderby#",$orderby,str_replace("#where#",$where,$query)));
   if ($result === FALSE){
     print pg_last_error($conn);
