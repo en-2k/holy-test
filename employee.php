@@ -44,14 +44,14 @@
     } else {
       $name = null;
       $todo = false;
-      $sql = "INSERT INTO eployee(name,department_id,fired) VALUES( ";
+      $sql = "INSERT INTO employee(name,department_id,fired) VALUES( ";
       if (isset($_GET['name']) && strlen(trim($_GET['name'])) > 0){
         $name = "'" . str_replace("'", "''", $_GET['name']) .  "'";
         $sql .= $name;
         $todo = true;
       }
-      if (isset($_GET['department_id']) && intval($_GET['department_id']) > 0){
-        $dep_id = intval($_GET['department_id']);
+      if (isset($_GET['dept']) && intval($_GET['dept']) > 0){
+        $dep_id = intval($_GET['dept']);
         $sql .= "," . $dep_id;
       } else {
         $sql .= ",NULL";
