@@ -85,13 +85,26 @@
     exit;
   }
   $orderby = "id";
-  if (isset($_GET['SORT']) && isset($_GET['attr'])){
-    $orderby = $_GET['attr'];
+  $where = "";
+  if (isset($_GET['SORT']) && is_array($_GET['SORT'])){
+    $orderby = [];
+    foreach($_GET['SORT'] as $_key => $_val){
+      $orderby []= $_key . ' ' . $_val;
+    }
+    $orderby = implode(',', $orderby);
   }
-  if (isset($_GET['SORT']) && isset($_GET['attr_desc'])){
-    $orderby = $_GET['attr_desc'] . " DESC ";
+  if (isset($_GET['FILTER']) && is_array($_GET['FILTER'])){
+    $where = [];
+    foreach($_GET['FILTER'] as $_key => $_val){
+      if ($_key === 'id'){
+        $where []= $_key . '=' . $_val;
+      } else {
+        $where []= $_key . '::varchar(255) like ' . "'" . str_replace("'","''",$_val) . "'";
+      }
+    }
+    $where = ' AND ' . implode(' AND ', $where);
   }
-  $result = pg_query($conn,"SELECT * FROM department ORDER BY " . $orderby);
+  $result = pg_query($conn,"SELECT * FROM department WHERE true " . $where . " ORDER BY " . $orderby);
   if ($result === FALSE){
     print pg_last_error($conn);
     pg_close($conn);
@@ -108,12 +121,14 @@
   <table border="1">
   <thead><tr>
     <th></th>
-    <th><a href="?SORT=&attr<?php echo ((isset($_GET['SORT']) && isset($_GET['attr']) && $_GET['attr']=="id") ? "_desc":""); ?>=id">id</a></th>
-    <th><a href="?SORT=&attr<?php echo ((isset($_GET['SORT']) && isset($_GET['attr']) && $_GET['attr']=="name") ? "_desc":""); ?>=name">Назва підрозділу</a></th>
+    <th><a data-act="SORT" data-attr="id" href="#">id</a></th>
+    <th><a data-act="SORT" data-attr="name" href="#">Назва підрозділу</a></th>
   </tr><tr>
     <td></td>
-    <td><input type="text" data-act="FILTER" data-attr="id" /></td>
-    <td><input type="text" data-act="FILTER" data-attr="name" /></td>
+    <td><input type="text" data-act="FILTER" data-attr="id" value="<?php echo ((isset($_GET["FILTER"]) && isset($_GET["FILTER"]["id"]))? 
+      str_replace('"',"&quot;",$_GET["FILTER"]["id"]):"")?>"/></td>
+    <td><input type="text" data-act="FILTER" data-attr="name" value="<?php echo ((isset($_GET["FILTER"]) && isset($_GET["FILTER"]["name"]))? 
+      str_replace('"',"&quot;",$_GET["FILTER"]["name"]):"")?>"/></td>
   </tr></thead>
   <tbody>
 <?php 
@@ -134,6 +149,44 @@
   </tbody>
   </table>
   <script>
+    var filter_doms = document.querySelectorAll('input[data-act="FILTER"]');
+    var sort_doms = document.querySelectorAll('a[data-act="SORT"]');
+    var filter = <?php echo ((isset($_GET['FILTER']))? json_encode($_GET['FILTER']): "{}"); ?>;
+    var sort = <?php echo ((isset($_GET['SORT']))? json_encode($_GET['SORT']): "{}"); ?>;
+    sort = {};
+    for (var i = 0; i < filter_doms.length; i++){
+      var durl = document.URL;
+      filter_doms[i].onchange = function(){
+        var attr = this.getAttribute("data-attr");
+        filter[attr] = this.value;
+        var url_params = "?";
+        for(var f in filter){
+          url_params += "FILTER["+f+"]="+filter[f]+"&";
+        }
+        for(var s in sort){
+          url_params += "SORT["+s+"]="+sort[s];
+          break;
+        }
+        document.location = document.URL.replace(/\?.*$/,"") + url_params;
+        return false;
+      }
+    }
+    for (var i = 0; i < sort_doms.length; i++){
+      sort_doms[i].onclick = function(){
+        var attr = this.getAttribute("data-attr");
+        sort[attr] = ((sort[attr] === "ASC")? "DESC":"ASC");
+        var url_params = "?";
+        for(var f in filter){
+          url_params += "FILTER["+f+"]="+filter[f]+"&";
+        }
+        for(var s in sort){
+          url_params += "SORT["+s+"]="+sort[s];
+          break;
+        }
+        document.location = document.URL.replace(/\?.*$/,"") + url_params;
+        return false;
+      };
+    }
     var doms = document.querySelectorAll("select.act");
     for (var i = 0; i < doms.length; i++){
       doms[i].onchange = function(){
