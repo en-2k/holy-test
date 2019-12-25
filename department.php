@@ -84,7 +84,14 @@
 <?php
     exit;
   }
-  $result = pg_query($conn,"SELECT * FROM department ORDER BY id");
+  $orderby = "id";
+  if (isset($_GET['SORT']) && isset($_GET['attr'])){
+    $orderby = $_GET['attr'];
+  }
+  if (isset($_GET['SORT']) && isset($_GET['attr_desc'])){
+    $orderby = $_GET['attr_desc'] . " DESC ";
+  }
+  $result = pg_query($conn,"SELECT * FROM department ORDER BY " . $orderby);
   if ($result === FALSE){
     print pg_last_error($conn);
     pg_close($conn);
@@ -98,18 +105,26 @@
   pg_close($conn);
 ?>
 <button id="INSERT">Додати підрозділ</button>
-  <table>
+  <table border="1">
   <thead><tr>
-    <th>#</th>
-    <th>id</th>
-    <th>Назва підрозділу</th>
+    <th></th>
+    <th><a href="?SORT=&attr<?php echo ((isset($_GET['SORT']) && isset($_GET['attr']) && $_GET['attr']=="id") ? "_desc":""); ?>=id">id</a></th>
+    <th><a href="?SORT=&attr<?php echo ((isset($_GET['SORT']) && isset($_GET['attr']) && $_GET['attr']=="name") ? "_desc":""); ?>=name">Назва підрозділу</a></th>
+  </tr><tr>
+    <td></td>
+    <td><input type="text" data-act="FILTER" data-attr="id" /></td>
+    <td><input type="text" data-act="FILTER" data-attr="name" /></td>
   </tr></thead>
   <tbody>
 <?php 
   for ($i = 0; $i < count($rows); $i++){
 ?>
 <tr>
-  <td><select class="act" data-id="<?php echo $rows[$i]['id']; ?>"><option value="ACT">--Дії--</option><option value="UPDATE">Редагувати</option><option value="DELETE">Видалити</option></select></td>
+  <td><select class="act" data-id="<?php echo $rows[$i]['id']; ?>">
+    <option value="ACT">--Дії--</option>
+    <option value="UPDATE">Редагувати</option>
+    <option value="DELETE">Видалити</option>
+  </select></td>
   <td attr="id"><?php echo  $rows[$i]['id'];?></td>
   <td attr="name"><?php echo  $rows[$i]['name'];?></td>
 </tr>
