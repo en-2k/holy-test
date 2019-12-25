@@ -48,7 +48,7 @@
     } else {
       $name = null;
       $todo = false;
-      $sql = "INSERT INTO vacations(department_id,d_start,d_end) VALUES( ";
+      $sql = "INSERT INTO vacations(employee_id,d_start,d_end) VALUES( ";
       if (isset($_GET['empl']) && intval($_GET['empl']) > 0){
         $emp_id = intval($_GET['empl']);
         $sql .= $emp_id;
@@ -181,7 +181,7 @@
   }
   pg_close($conn);
 ?>
-<button id="INSERT">Додати співробітника</button>
+<button id="INSERT">Додати період відпустки</button>
   <table border="1">
   <thead><tr>
     <th></th>
