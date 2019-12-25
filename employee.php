@@ -284,6 +284,7 @@
           butt.setAttribute("data-act",this.value);
           butt.innerText = "зберегти";
           butt.onclick = function(){
+            this.setAttribute("disabled","disabled");
             var id = this.getAttribute('data-id');
             var act = this.getAttribute('data-act');
             var url_params = "?";
