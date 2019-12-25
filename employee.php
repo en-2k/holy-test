@@ -15,12 +15,12 @@
       }
       if (isset($_GET['dept']) && intval($_GET['dept']) > 0){
         $dep_id = intval($_GET['dept']);
-        $sql .= "department_id = " . $dep_id;
+        $sql .= (($todo)? ",":"") . "department_id = " . $dep_id;
         $todo = true;
       }
       if (isset($_GET['fired'])){
         $fired = "'" . str_replace("'", "''", $_GET['fired']) .  "'::date";
-        $sql .= "fired = " . $fired;
+        $sql .= (($todo)? ",":"") . "fired = " . $fired;
         $todo = true;
       }
       $sql .= " WHERE id = ".(intval($_GET['id']));
