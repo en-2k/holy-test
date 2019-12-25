@@ -1,48 +1,41 @@
 <?php
+  $err = false;
   if(isset($_GET['UPDATE']) && isset($_GET['id']) && intval($_GET['id']) > 0){
     $conn = pg_connect($_ENV['DATABASE_URL']);
     if (!$conn){
-      header("Location: department.php?error=" . urlencode('Помилка з\'єднання з Postgres.'));
-      exit;
-    }
-    $name = null;
-    $todo = false;
-    $sql = "UPDATE department SET ";
-    if (isset($_GET['name'])){
-      $name = "'" . str_replace("'", "''", $_GET['name']) .  "'";
-      $sql .= "name = " . $name;
-      $todo = true;
-    }
-    $sql .= " WHERE id = ".(intval($_GET['id']));
-    if ($todo){
-    $result = pg_query($conn,$sql);
-    if ($result === FALSE){
-      $err = pg_last_error($conn);
-      header("Location: department.php?error=" . urlencode($err));
+      $err = 'Помилка з\'єднання з Postgres.';
+    } else {
+      $name = null;
+      $todo = false;
+      $sql = "UPDATE department SET ";
+      if (isset($_GET['name'])){
+        $name = "'" . str_replace("'", "''", $_GET['name']) .  "'";
+        $sql .= "name = " . $name;
+        $todo = true;
+      }
+      $sql .= " WHERE id = ".(intval($_GET['id']));
+      if ($todo){
+        $result = pg_query($conn,$sql);
+        if ($result === FALSE){
+          $err = pg_last_error($conn);
+        }
+      }
       pg_close($conn);
-      exit;
     }
-    }
-    header("Location: department.php");
-    pg_close($conn);
   }
   if(isset($_GET['DELETE']) && isset($_GET['id']) && intval($_GET['id']) > 0){
     $conn = pg_connect($_ENV['DATABASE_URL']);
     if (!$conn){
-      header("Location: department.php?error=" . urlencode('Помилка з\'єднання з Postgres.'));
-      exit;
-    }
-    $sql = "DELETE FROM department ";
-    $sql .= " WHERE id = ".(intval($_GET['id']));
-    $result = pg_query($conn,$sql);
-    if ($result === FALSE){
-      $err = pg_last_error($conn);
-      header("Location: department.php?error=" . urlencode($err));
+      $err = 'Помилка з\'єднання з Postgres.';
+    } else {
+      $sql = "DELETE FROM department ";
+      $sql .= " WHERE id = ".(intval($_GET['id']));
+      $result = pg_query($conn,$sql);
+      if ($result === FALSE){
+        $err = pg_last_error($conn);
+      }
       pg_close($conn);
-      exit;
     }
-    header("Location: department.php");
-    pg_close($conn);
   }
   
 ?>
@@ -57,6 +50,9 @@
   <body>
 <p><a href="index.php">&lt; Повернутися на головну</a></p>
 <?php
+  if($err){
+    ?><p><?php echo $err; ?></p><?php
+  }
   $conn = pg_connect($_ENV['DATABASE_URL']);
   if (!$conn){
 ?>
@@ -77,9 +73,6 @@
   }
   pg_free_result ( $result );
   pg_close($conn);
-  if(isset($_GET['error'])){
-    ?><p><?php echo $_GET['error']; ?></p><?php 
-  }
 ?>
 <button id="INSERT">Додати підрозділ</button>
   <table>
@@ -133,7 +126,7 @@
               var param = inputs[k].getAttribute('data-attr');
               url_params += "&"+param+"="+encodeURIComponent(inputs[k].value);
             }
-            document.location = document.URL + url_params;
+            document.location = document.URL.replace(/?.+$/,"") + url_params;
             return false;
           };
           parent.appendChild(butt);
@@ -145,7 +138,7 @@
           if (!confirm("Точно видалити?")){
             return false;
           }
-          document.location = document.URL + url_params;
+          document.location = document.URL.replace(/?.+$/,"") + url_params;
         }
       };
     }
