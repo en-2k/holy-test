@@ -1,3 +1,30 @@
+<?php
+  if(isset($_GET['UPDATE']) && isset($_GET['id']) && intval($_GET['id']) > 0){
+    $conn = pg_connect($_ENV['DATABASE_URL']);
+    if (!$conn){
+      header("Location: department.php?error=" . urlencode('Помилка з\'єднання з Postgres.'));
+      exit;
+    }
+    $name = null;
+    $todo = false;
+    $sql = "UPDATE department SET "
+    if (isset($_GET['name'])){
+      $name = "'" . str_replace("'","''",$_GET['name']) .  "'";
+      $sql .= "name = " . $name;
+    }
+    $sql .= " WHERE id = ".(intval($_GET['id']));
+    $result = pg_query($conn,"SELECT * FROM department ORDER BY id");
+    if ($result === FALSE){
+      $err = pg_last_error($conn);
+      header("Location: department.php?error=" . urlencode($err));
+      pg_close($conn);
+      exit;
+    }
+    header("Location: department.php");
+    pg_close($conn);
+  }
+  
+?>
 <!doctype html>
 <html lang="uk">
   <head>
@@ -29,8 +56,11 @@
   }
   pg_free_result ( $result );
   pg_close($conn);
+  if(isset($_GET['error'])){
+    ?><p><?php echo $_GET['error']; ?></p><?php 
+  }
 ?>
-<button id="INSERT"></button>
+<button id="INSERT">Додати підрозділ</button>
   <table>
   <thead><tr>
     <th>#</th>
@@ -42,14 +72,40 @@
   for ($i = 0; $i < count($rows); $i++){
 ?>
 <tr>
-  <td><select data-id="<?php $rows[$i]['id']; ?>"><option value="UPDATE">Редагувати</option><option value="DELETE">Видалити</option></select></td>
-  <td><?php echo  $rows[$i]['id'];?></td>
-  <td><?php echo  $rows[$i]['name'];?></td>
+  <td><select class="act" data-id="<?php $rows[$i]['id']; ?>"><option value="ACT">--Дії--</option><option value="UPDATE">Редагувати</option><option value="DELETE">Видалити</option></select></td>
+  <td attr="id"><?php echo  $rows[$i]['id'];?></td>
+  <td attr="name"><?php echo  $rows[$i]['name'];?></td>
 </tr>
 <?php
   }
 ?>
   </tbody>
   </table>
+  <script>
+    var doms = document.querySelectorAll("SELECT.ACT");
+    for (var i = 0; i < doms.length; i++){
+      doms[i].onchange = function(){
+        var id = this.getAttribute("data-id");
+        if(this.value == "UPDATE"){
+          var tds = this.parentNode.parentNode.querySelectorAll("TD");
+          for (var j = 1; j < tds.length; j++){
+            var attr = tds[j].getAttribute("attr");
+            if (attr == "id"){
+              continue;
+            }
+            var val = tds[j].innerHTML;
+            tds[j].innerHTML = '<input type="text" data-id="'+id+'" data-attr="'+attr+'"  value="" />';
+            tds[j].querySelector("INPUT").value = val;
+          }
+        }
+        var parent = this.parentNode;
+        var butt = document.createElement('BUTTON');
+        butt.setAttribute("data-id",id);
+        butt.innerText = "зберегти";
+        parent.appendChild(butt);
+        this.parentNode.removeChild(this);
+      };
+    }
+  </script>
   </body>
 </html>
