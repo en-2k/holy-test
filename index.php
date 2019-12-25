@@ -11,6 +11,7 @@
   <li><a href="seed.php">Заповнити випадковими даними</a></li>
   <li><a href="department.php">Підрозділи</a></li>
   <li><a href="employee.php">Співробітники</a></li>
+  <li><a href="vacations.php">Періоди відпустки співробітників</a></li>
   </ul>
   </body>
 </html>
