@@ -96,10 +96,10 @@
   if (isset($_GET['FILTER']) && is_array($_GET['FILTER'])){
     $where = [];
     foreach($_GET['FILTER'] as $_key => $_val){
-      if ($_key === 'id'){
+      if ($_key === 'id' && intval($_val) > 0){
         $where []= $_key . '=' . $_val;
       } else {
-        $where []= $_key . '::varchar(255) like ' . "'" . str_replace("'","''",$_val) . "'";
+        $where []= 'upper(' . $_key . '::varchar(255)) like upper(' . "'" . str_replace("'","''",$_val) . "')";
       }
     }
     $where = ' AND ' . implode(' AND ', $where);
