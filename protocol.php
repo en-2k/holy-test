@@ -93,7 +93,7 @@
   <td attr="act"><?php echo  $rows[$i]['act'];?></td>
   <td attr="table_name"><?php echo  $rows[$i]['table_name'];?></td>
   <td attr="table_id"><?php echo  $rows[$i]['table_id'];?></td>
-  <td attr="descr"><?php echo  $rows[$i]['descr'];?></td>
+  <td attr="descr"><pre><?php echo  $rows[$i]['descr'];?></pre></td>
 </tr>
 <?php
   }
