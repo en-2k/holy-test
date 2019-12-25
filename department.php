@@ -153,7 +153,6 @@
     var sort_doms = document.querySelectorAll('a[data-act="SORT"]');
     var filter = <?php echo ((isset($_GET['FILTER']))? json_encode($_GET['FILTER']): "{}"); ?>;
     var sort = <?php echo ((isset($_GET['SORT']))? json_encode($_GET['SORT']): "{}"); ?>;
-    sort = {};
     for (var i = 0; i < filter_doms.length; i++){
       var durl = document.URL;
       filter_doms[i].onchange = function(){
