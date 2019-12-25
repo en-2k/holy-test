@@ -32,7 +32,7 @@
       header("Location: department.php?error=" . urlencode('Помилка з\'єднання з Postgres.'));
       exit;
     }
-    $sql = "DELETE FROM department SET ";
+    $sql = "DELETE FROM department ";
     $sql .= " WHERE id = ".(intval($_GET['id']));
     $result = pg_query($conn,$sql);
     if ($result === FALSE){
