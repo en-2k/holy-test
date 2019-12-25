@@ -26,6 +26,24 @@
     header("Location: department.php");
     pg_close($conn);
   }
+  if(isset($_GET['DELETE']) && isset($_GET['id']) && intval($_GET['id']) > 0){
+    $conn = pg_connect($_ENV['DATABASE_URL']);
+    if (!$conn){
+      header("Location: department.php?error=" . urlencode('Помилка з\'єднання з Postgres.'));
+      exit;
+    }
+    $sql = "DELETE FROM department SET ";
+    $sql .= " WHERE id = ".(intval($_GET['id']));
+    $result = pg_query($conn,$sql);
+    if ($result === FALSE){
+      $err = pg_last_error($conn);
+      header("Location: department.php?error=" . urlencode($err));
+      pg_close($conn);
+      exit;
+    }
+    header("Location: department.php");
+    pg_close($conn);
+  }
   
 ?>
 <!doctype html>
@@ -104,16 +122,26 @@
         var parent = this.parentNode;
         var butt = document.createElement('BUTTON');
         butt.setAttribute("data-id",id);
+        butt.setAttribute("data-act",this.value);
         butt.innerText = "зберегти";
         butt.onclick = function(){
           var id = this.getAttribute('data-id');
-          var inputs = this.parentNode.parentNode.querySelectorAll('input[data-id="'+id+'"]');
-          var url_params = "?id="+id;
-          for (var k = 0; k < inputs.length; k++){
-            var param = inputs[k].getAttribute('data-attr');
-            url_params += "&"+param+"="+encodeURIComponent(inputs[k].value);
+          var act = this.getAttribute('data-act');
+          var url_params = "";
+          url_params = "?"+act+"=&id="+id;
+          if (act === "UPDATE"){
+            var inputs = this.parentNode.parentNode.querySelectorAll('input[data-id="'+id+'"]');
+            for (var k = 0; k < inputs.length; k++){
+              var param = inputs[k].getAttribute('data-attr');
+              url_params += "&"+param+"="+encodeURIComponent(inputs[k].value);
+            }
           }
-          doument.location = document.URL + url_params;
+          if (act === "DELETE"){
+            if (!confirm("Точно видалити?")){
+              return false;
+            }
+          }
+          document.location = document.URL + url_params;
           return false;
         };
         parent.appendChild(butt);
