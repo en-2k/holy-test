@@ -147,7 +147,7 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes'){
         "'2019"
         . "-" . (($month >= 10)? "":"0") . $month
         . "-01" . "'" ;
-    $d_end = "date " . $d_start . " + integer '" . random_int(0,20) . "' + integer '" . $day . "'" ;
+    $d_end = "date " . $d_start . " + integer '" . random_int(0,4) . "' + integer '" . $day . "'" ;
     $d_start = "date " . $d_start . " + integer '" . $day . "'";
     $sql .= "INSERT INTO Vacations(employee_id,d_start,d_end) "
       . "VALUES(" 
