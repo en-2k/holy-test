@@ -133,6 +133,7 @@
               var param = inputs[k].getAttribute('data-attr');
               url_params += "&"+param+"="+encodeURIComponent(inputs[k].value);
             }
+            document.location = document.URL + url_params;
             return false;
           };
           parent.appendChild(butt);
