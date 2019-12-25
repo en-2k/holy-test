@@ -23,6 +23,29 @@
       pg_close($conn);
     }
   }
+  if(isset($_GET['INSERT'])){
+    $conn = pg_connect($_ENV['DATABASE_URL']);
+    if (!$conn){
+      $err = 'Помилка з\'єднання з Postgres.';
+    } else {
+      $name = null;
+      $todo = false;
+      $sql = "INSERT INTO department(name) VALUES( ";
+      if (isset($_GET['name']) && strlen(trim($_GET['name'])) > 0)){
+        $name = "'" . str_replace("'", "''", $_GET['name']) .  "'";
+        $sql .= $name;
+        $todo = true;
+      }
+      $sql .= " ) ";
+      if ($todo){
+        $result = pg_query($conn,$sql);
+        if ($result === FALSE){
+          $err = pg_last_error($conn);
+        }
+      }
+      pg_close($conn);
+    }
+  }
   if(isset($_GET['DELETE']) && isset($_GET['id']) && intval($_GET['id']) > 0){
     $conn = pg_connect($_ENV['DATABASE_URL']);
     if (!$conn){
@@ -144,14 +167,32 @@
     }
     document.querySelector("#INSERT").onclick = function(){
       var tbody = document.querySelector("table tbody");
-      var trhtml = document.querySelector("table tbody tr:nth-child(1)").innerHTML;
+      var tr_first = document.querySelector("table tbody tr:nth-child(1)");
+      var trhtml = tr_first.innerHTML;
       var td1html = document.querySelector("table tbody tr td:nth-child(1)").innerHTML;
       var tr = document.createElement('TR');
       tr.setAttribute("data-act","INSERT");
       tr.innerHTML = trhtml.replace(td1html,"");
-      tbody.appendChild(tr);
+      tbody.insertBefore(tr,tr_first);
       var tds = document.querySelectorAll('tr[data-act="INSERT"] td');
-      for (var j = 1; j < tds.length; j++){
+      for (var j = 0; j < tds.length; j++){
+        if (j === 0){
+          var butt = document.createElement('BUTTON');
+          butt.setAttribute("data-act","INSERT");
+          butt.innerText = "зберегти";
+          butt.onclick = function(){
+            var url_params = "";
+            url_params = "?INSERT=";
+            var inputs = this.parentNode.parentNode.querySelectorAll('input[data-act="INSERT"]');
+            for (var k = 0; k < inputs.length; k++){
+              var param = inputs[k].getAttribute('data-attr');
+              url_params += "&"+param+"="+encodeURIComponent(inputs[k].value);
+            }
+            document.location = document.URL.replace(/\?.*$/,"") + url_params;
+            return false;
+          };
+          tds[j].appendChild(butt);
+        }
         var attr = tds[j].getAttribute("attr");
         if (attr == "id"){
           tds[j].innerHTML = '';
