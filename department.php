@@ -253,6 +253,7 @@
       };
     }
     document.querySelector("#INSERT").onclick = function(){
+      this.setAttribute("disabled","disabled");
       var tbody = document.querySelector("table tbody");
       var tr_first = document.querySelector("table tbody tr:nth-child(1)");
       var trhtml = tr_first.innerHTML;
