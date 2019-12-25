@@ -55,7 +55,7 @@ SELECT
   d.name AS dept,
   em.name AS nm_1,
   v1.name AS nm_2, 
-  CASE WHEN v1.d_start<v.d_dstart THEN v.d_start 
+  CASE WHEN v1.d_start<v.d_start THEN v.d_start 
   ELSE v1.d_start END AS min_inters 
 FROM vacations v 
 INNER JOIN (SELECT v1.*,em.* 
