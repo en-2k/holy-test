@@ -111,7 +111,15 @@ $protoc$ LANGUAGE plpgsql;
 
 DROP TRIGGER IF EXISTS fire_protocol ON Department;
 DROP TRIGGER IF EXISTS protocol_Department ON Department;
+DROP TRIGGER IF EXISTS protocol_Employee ON Employee;
+DROP TRIGGER IF EXISTS protocol_Vacations ON Vacations;
 
 CREATE TRIGGER protocol_Department
 AFTER INSERT OR UPDATE OR DELETE ON Department
+    FOR EACH ROW EXECUTE PROCEDURE to_protocol();
+CREATE TRIGGER protocol_Employee
+AFTER INSERT OR UPDATE OR DELETE ON Employee
+    FOR EACH ROW EXECUTE PROCEDURE to_protocol();
+CREATE TRIGGER protocol_Vacations
+AFTER INSERT OR UPDATE OR DELETE ON Vacations
     FOR EACH ROW EXECUTE PROCEDURE to_protocol();
