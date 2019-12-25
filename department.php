@@ -98,7 +98,7 @@
     foreach($_GET['FILTER'] as $_key => $_val){
       if ($_key === 'id' && intval($_val) > 0){
         $where []= $_key . '=' . $_val;
-      } else {
+      } else if (strlen(trim($_val)) > 0){
         $where []= 'upper(' . $_key . '::varchar(255)) like upper(' . "'" . str_replace("'","''",$_val) . "')";
       }
     }
