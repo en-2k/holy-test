@@ -10,6 +10,7 @@
   <ul>
   <li><a href="seed.php">Заповнити випадковими даними</a></li>
   <li><a href="department.php">Підрозділи</a></li>
+  <li><a href="employee.php">Співробітники</a></li>
   </ul>
   </body>
 </html>

@@ -7,10 +7,20 @@
     } else {
       $name = null;
       $todo = false;
-      $sql = "UPDATE department SET ";
+      $sql = "UPDATE employee SET ";
       if (isset($_GET['name'])){
         $name = "'" . str_replace("'", "''", $_GET['name']) .  "'";
         $sql .= "name = " . $name;
+        $todo = true;
+      }
+      if (isset($_GET['dept']) && intval($_GET['dept']) > 0){
+        $dep_id = intval($_GET['dept']);
+        $sql .= "department_id = " . $dep_id;
+        $todo = true;
+      }
+      if (isset($_GET['fired'])){
+        $fired = "'" . str_replace("'", "''", $_GET['fired']) .  "'::date";
+        $sql .= "fired = " . $fired;
         $todo = true;
       }
       $sql .= " WHERE id = ".(intval($_GET['id']));
@@ -30,11 +40,23 @@
     } else {
       $name = null;
       $todo = false;
-      $sql = "INSERT INTO department(name) VALUES( ";
+      $sql = "INSERT INTO eployee(name,department_id,fired) VALUES( ";
       if (isset($_GET['name']) && strlen(trim($_GET['name'])) > 0){
         $name = "'" . str_replace("'", "''", $_GET['name']) .  "'";
         $sql .= $name;
         $todo = true;
+      }
+      if (isset($_GET['department_id']) && intval($_GET['department_id']) > 0){
+        $dep_id = intval($_GET['department_id']);
+        $sql .= "," . $dep_id;
+      } else {
+        $sql .= ",NULL";
+      }
+      if (isset($_GET['fired'])){
+        $fired = "'" . str_replace("'", "''", $_GET['fired']) .  "'::date";
+        $sql .= "," . $fired;
+      } else {
+        $sql .= ",NULL";
       }
       $sql .= " ) ";
       if ($todo){
@@ -51,7 +73,7 @@
     if (!$conn){
       $err = 'Помилка з\'єднання з Postgres.';
     } else {
-      $sql = "DELETE FROM department ";
+      $sql = "DELETE FROM employee ";
       $sql .= " WHERE id = ".(intval($_GET['id']));
       $result = pg_query($conn,$sql);
       if ($result === FALSE){
@@ -99,7 +121,9 @@
       if ($_key === 'id' && intval($_val) > 0){
         $where []= $_key . '=' . $_val;
       } else if (strlen(trim($_val)) > 0){
-        if (strtoupper($_val) == "NULL"){
+        if(strtoupper($_key) == "DEPT"){
+          $where []= 'upper(dep.name) like upper(' . "'" . str_replace("'","''",$_val) . "')";
+        } else if (strtoupper($_val) == "NULL"){
           $where []= $_key . ' IS NULL';
         } else {
           $where []= 'upper(' . $_key . '::varchar(255)) like upper(' . "'" . str_replace("'","''",$_val) . "')";
@@ -112,7 +136,7 @@
       $where = "";
     }
   }
-  $result = pg_query($conn,"SELECT * FROM department WHERE true " . $where . " ORDER BY " . $orderby);
+  $result = pg_query($conn,"SELECT e.id,e.name,dep.name as dept,e.fired FROM employee e LEFT JOIN department dep ON dep.id=e.department_id WHERE true " . $where . " ORDER BY " . $orderby);
   if ($result === FALSE){
     print pg_last_error($conn);
     pg_close($conn);
@@ -123,20 +147,36 @@
     $rows []= $row;
   }
   pg_free_result ( $result );
+  $result = pg_query($conn,"SELECT id,name FROM department ORDER BY name");
+  if ($result === FALSE){
+    print pg_last_error($conn);
+    pg_close($conn);
+    exit;
+  }
+  $depts = [];
+  while ($row = pg_fetch_assoc($result)) {
+    $depts []= $row;
+  }
   pg_close($conn);
 ?>
-<button id="INSERT">Додати підрозділ</button>
+<button id="INSERT">Додати співробітника</button>
   <table border="1">
   <thead><tr>
     <th></th>
     <th><a data-act="SORT" data-attr="id" href="#">id</a></th>
-    <th><a data-act="SORT" data-attr="name" href="#">Назва підрозділу</a></th>
+    <th><a data-act="SORT" data-attr="name" href="#">ПІБ</a></th>
+    <th><a data-act="SORT" data-attr="dept" href="#">Підрозділ</a></th>
+    <th><a data-act="SORT" data-attr="fired" href="#">Звільнено</a></th>
   </tr><tr>
     <td></td>
     <td><input type="text" data-act="FILTER" data-attr="id" value="<?php echo ((isset($_GET["FILTER"]) && isset($_GET["FILTER"]["id"]))? 
       str_replace('"',"&quot;",$_GET["FILTER"]["id"]):"")?>"/></td>
     <td><input type="text" data-act="FILTER" data-attr="name" value="<?php echo ((isset($_GET["FILTER"]) && isset($_GET["FILTER"]["name"]))? 
       str_replace('"',"&quot;",$_GET["FILTER"]["name"]):"")?>"/></td>
+    <td><input type="text" data-act="FILTER" data-attr="name" value="<?php echo ((isset($_GET["FILTER"]) && isset($_GET["FILTER"]["dept"]))? 
+      str_replace('"',"&quot;",$_GET["FILTER"]["dept"]):"")?>"/></td>
+    <td><input type="text" data-act="FILTER" data-attr="name" value="<?php echo ((isset($_GET["FILTER"]) && isset($_GET["FILTER"]["fired"]))? 
+      str_replace('"',"&quot;",$_GET["FILTER"]["fired"]):"")?>"/></td>
   </tr></thead>
   <tbody>
 <?php 
@@ -150,6 +190,8 @@
   </select></td>
   <td attr="id"><?php echo  $rows[$i]['id'];?></td>
   <td attr="name"><?php echo  $rows[$i]['name'];?></td>
+  <td attr="dept"><?php echo  $rows[$i]['dept'];?></td>
+  <td attr="fired"><?php echo  $rows[$i]['fired'];?></td>
 </tr>
 <?php
   }
@@ -206,7 +248,22 @@
               continue;
             }
             var val = tds[j].innerHTML;
-            tds[j].innerHTML = '<input type="text" data-id="'+id+'" data-attr="'+attr+'"  value="" />';
+            if (attr === "dept"){
+              tds[j].innerHTML = '<select data-id="'+id+'" data-attr="'+attr+'" id="'+attr+'_'+id+'"></select>';
+              var depts = <?php echo json_encode($depts); ?>;
+              var sel = document.getElementById(attr+'_'+id);
+              for (var k = 0; k < depts.length; k++){
+                var opt = document.createElement("OPTION");
+                opt.value = depts[i].id;
+                opt.innerText = depts[i].name;
+                if(val === depts[i].name){
+                  opt.setAttribute("selected","selected");
+                }
+                sel.appendChild(opt);
+              }
+            } else {
+              tds[j].innerHTML = '<input type="text" data-id="'+id+'" data-attr="'+attr+'"  value="" />';
+            }
             tds[j].querySelector("INPUT").value = val;
           }
           var parent = this.parentNode;
@@ -225,7 +282,7 @@
               url_params += "SORT["+s+"]="+sort[s];
             }
             url_params += "&"+act+"=&id="+id;
-            var inputs = this.parentNode.parentNode.querySelectorAll('input[data-id="'+id+'"]');
+            var inputs = this.parentNode.parentNode.querySelectorAll('input[data-id="'+id+'"],select[data-id="'+id+'"]');
             for (var k = 0; k < inputs.length; k++){
               var param = inputs[k].getAttribute('data-attr');
               url_params += "&"+param+"="+encodeURIComponent(inputs[k].value);
@@ -276,7 +333,7 @@
               url_params += "SORT["+s+"]="+sort[s];
             }
             url_params += "&INSERT=";
-            var inputs = this.parentNode.parentNode.querySelectorAll('input[data-act="INSERT"]');
+            var inputs = this.parentNode.parentNode.querySelectorAll('input[data-act="INSERT"],select[data-act="INSERT"]');
             for (var k = 0; k < inputs.length; k++){
               var param = inputs[k].getAttribute('data-attr');
               url_params += "&"+param+"="+encodeURIComponent(inputs[k].value);
@@ -293,7 +350,19 @@
           continue;
         }
         var val = tds[j].innerHTML;
-        tds[j].innerHTML = '<input type="text" data-act="INSERT" data-attr="'+attr+'"  value="" />';
+        if (attr === "dept"){
+          tds[j].innerHTML = '<select data-act="INSERT" data-attr="'+attr+'" id="'+attr+'_'+'"></select>';
+          var depts = <?php echo json_encode($depts); ?>;
+          var sel = document.getElementById(attr+'_');
+          for (var k = 0; k < depts.length; k++){
+            var opt = document.createElement("OPTION");
+            opt.value = depts[i].id;
+            opt.innerText = depts[i].name;
+            sel.appendChild(opt);
+          }
+        } else {
+          tds[j].innerHTML = '<input type="text" data-act="INSERT" data-attr="'+attr+'"  value="" />';
+        }
         tds[j].querySelector("INPUT").value = '';
       }
     };
