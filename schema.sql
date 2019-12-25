@@ -33,8 +33,6 @@ CREATE TABLE protocol(
     table_id          INT,
     descr             TEXT
 );
-DROP TABLE IF EXISTS tt;
-CREATE TABLE tt(id serial primary key,d1 date,d2 date);
 
 CREATE OR REPLACE FUNCTION to_protocol() RETURNS TRIGGER AS $protoc$
 DECLARE t_descr text;
@@ -64,7 +62,6 @@ DECLARE t_descr text;
                 END IF;
             EXCEPTION WHEN OTHERS THEN END;
             BEGIN
-                INSERT INTO tt(d1,d2) VALUES(OLD.fired,NEW.fired);
                 IF coalesce(OLD.fired::text,'NULL') <> coalesce(NEW.fired::text,'NULL') THEN
                 t_descr = t_descr || 'fired ' || E'\n';
                 t_descr = t_descr || ' old: ' || coalesce(OLD.fired::text , 'NULL')||  E'\n';
