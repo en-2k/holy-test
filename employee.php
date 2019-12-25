@@ -119,10 +119,12 @@
     $where = [];
     foreach($_GET['FILTER'] as $_key => $_val){
       if ($_key === 'id' && intval($_val) > 0){
-        $where []= $_key . '=' . $_val;
+        $where []= "e." . $_key . '=' . $_val;
       } else if (strlen(trim($_val)) > 0){
         if(strtoupper($_key) == "DEPT"){
           $where []= 'upper(dep.name) like upper(' . "'" . str_replace("'","''",$_val) . "')";
+        } else if (strtoupper($_key) == "NAME"){
+          $where []= 'upper(e.name) like upper(' . "'" . str_replace("'","''",$_val) . "')";
         } else if (strtoupper($_val) == "NULL"){
           $where []= $_key . ' IS NULL';
         } else {
