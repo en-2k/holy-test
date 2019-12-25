@@ -126,7 +126,7 @@
               var param = inputs[k].getAttribute('data-attr');
               url_params += "&"+param+"="+encodeURIComponent(inputs[k].value);
             }
-            document.location = document.URL.replace(/?.+$/,"") + url_params;
+            document.location = document.URL.replace(/\?.*$/,"") + url_params;
             return false;
           };
           parent.appendChild(butt);
@@ -138,7 +138,7 @@
           if (!confirm("Точно видалити?")){
             return false;
           }
-          document.location = document.URL.replace(/?.+$/,"") + url_params;
+          document.location = document.URL.replace(/\?.*$/,"") + url_params;
         }
       };
     }
