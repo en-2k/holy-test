@@ -19,7 +19,11 @@
         $todo = true;
       }
       if (isset($_GET['fired'])){
-        $fired = "'" . str_replace("'", "''", $_GET['fired']) .  "'::date";
+        if (strlen($_GET['fired']) == 0){
+          $fired = "NULL";
+        } else {
+          $fired = "'" . str_replace("'", "''", $_GET['fired']) .  "'::date";
+        }
         $sql .= (($todo)? ",":"") . "fired = " . $fired;
         $todo = true;
       }
@@ -53,7 +57,11 @@
         $sql .= ",NULL";
       }
       if (isset($_GET['fired'])){
-        $fired = "'" . str_replace("'", "''", $_GET['fired']) .  "'::date";
+        if (strlen($_GET['fired']) == 0){
+          $fired = "NULL";
+        } else {
+          $fired = "'" . str_replace("'", "''", $_GET['fired']) .  "'::date";
+        }
         $sql .= "," . $fired;
       } else {
         $sql .= ",NULL";
