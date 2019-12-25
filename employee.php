@@ -266,7 +266,9 @@
             } else {
               tds[j].innerHTML = '<input type="text" data-id="'+id+'" data-attr="'+attr+'"  value="" />';
             }
+            if (tds[j].querySelector("INPUT")){
             tds[j].querySelector("INPUT").value = val;
+            }
           }
           var parent = this.parentNode;
           var butt = document.createElement('BUTTON');
@@ -365,7 +367,9 @@
         } else {
           tds[j].innerHTML = '<input type="text" data-act="INSERT" data-attr="'+attr+'"  value="" />';
         }
+        if (tds[j].querySelector("INPUT")){
         tds[j].querySelector("INPUT").value = '';
+        }
       }
     };
   </script>
