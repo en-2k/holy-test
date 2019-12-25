@@ -192,6 +192,7 @@
             return false;
           };
           tds[j].appendChild(butt);
+          continue;
         }
         var attr = tds[j].getAttribute("attr");
         if (attr == "id"){
