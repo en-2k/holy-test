@@ -102,7 +102,11 @@
         $where []= 'upper(' . $_key . '::varchar(255)) like upper(' . "'" . str_replace("'","''",$_val) . "')";
       }
     }
-    $where = ' AND ' . implode(' AND ', $where);
+    if (count($where)>0){
+      $where = ' AND ' . implode(' AND ', $where);
+    } else {
+      $where = "";
+    }
   }
   $result = pg_query($conn,"SELECT * FROM department WHERE true " . $where . " ORDER BY " . $orderby);
   if ($result === FALSE){
