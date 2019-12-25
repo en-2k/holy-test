@@ -31,7 +31,7 @@
       $name = null;
       $todo = false;
       $sql = "INSERT INTO department(name) VALUES( ";
-      if (isset($_GET['name']) && strlen(trim($_GET['name'])) > 0)){
+      if (isset($_GET['name']) && strlen(trim($_GET['name'])) > 0){
         $name = "'" . str_replace("'", "''", $_GET['name']) .  "'";
         $sql .= $name;
         $todo = true;
