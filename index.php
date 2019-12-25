@@ -12,6 +12,7 @@
   <li><a href="department.php">Підрозділи</a></li>
   <li><a href="employee.php">Співробітники</a></li>
   <li><a href="vacations.php">Періоди відпустки співробітників</a></li>
+  <li><a href="intersects.php">Періоди відпусток пар співробітників в межах одного підрозділу, що перетинаються</a></li>
   </ul>
   </body>
 </html>
