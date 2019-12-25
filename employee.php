@@ -256,9 +256,9 @@
               var sel = document.getElementById(attr+'_'+id);
               for (var k = 0; k < depts.length; k++){
                 var opt = document.createElement("OPTION");
-                opt.value = depts[i].id;
-                opt.innerText = depts[i].name;
-                if(val === depts[i].name){
+                opt.value = depts[k].id;
+                opt.innerText = depts[k].name;
+                if(val === depts[k].name){
                   opt.setAttribute("selected","selected");
                 }
                 sel.appendChild(opt);
@@ -358,8 +358,8 @@
           var sel = document.getElementById(attr+'_');
           for (var k = 0; k < depts.length; k++){
             var opt = document.createElement("OPTION");
-            opt.value = depts[i].id;
-            opt.innerText = depts[i].name;
+            opt.value = depts[k].id;
+            opt.innerText = depts[k].name;
             sel.appendChild(opt);
           }
         } else {
