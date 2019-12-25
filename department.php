@@ -149,11 +149,13 @@
       };
     }
     document.querySelector("#INSERT").onclick = function(){
-      var html = document.querySelector("table tbody").innerHTML;
+      var tbody = document.querySelector("table tbody");
       var trhtml = document.querySelector("table tbody tr:nth-child(1)").innerHTML;
       var td1html = document.querySelector("table tbody tr td:nth-child(1)").innerHTML;
-      html += '<tr data-act="INSERT">'+trhtml.replace(td1.html,"")+"</tr>";
-      document.querySelector("table tbody").innerHTML = html;
+      var tr = document.createElement('TR');
+      tr.setAttribute("data-act","INSERT");
+      tr.innerHTML = trhtml.replace(td1html,"");
+      tbody.appendChild(tr);
       var tds = document.querySelectorAll('tr[data-act="INSERT"] td');
       for (var j = 1; j < tds.length; j++){
         var attr = tds[j].getAttribute("attr");
@@ -162,7 +164,7 @@
           continue;
         }
         var val = tds[j].innerHTML;
-        tds[j].innerHTML = '<input type="text" data-id="'+id+'" data-attr="'+attr+'"  value="" />';
+        tds[j].innerHTML = '<input type="text" data-act="INSERT" data-attr="'+attr+'"  value="" />';
         tds[j].querySelector("INPUT").value = '';
       }
     };
