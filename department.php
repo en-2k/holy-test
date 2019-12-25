@@ -179,8 +179,8 @@
           url_params += "FILTER["+f+"]="+filter[f]+"&";
         }
         for(var s in sort){
+          if(s !== attr){ continue; }
           url_params += "SORT["+s+"]="+sort[s];
-          break;
         }
         document.location = document.URL.replace(/\?.*$/,"") + url_params;
         return false;
