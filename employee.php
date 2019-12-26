@@ -136,7 +136,7 @@
         } else if (strtoupper($_val) == "NULL"){
           $where []= "e." . $_key . ' IS NULL';
         } else {
-          $where []= "e." . $_key . '::varchar(255)) like upper(' . "'" . str_replace("'","''",$_val) . "')";
+          $where []= "e." . $_key . '::varchar(255) like upper(' . "'" . str_replace("'","''",$_val) . "')";
         }
       }
     }
