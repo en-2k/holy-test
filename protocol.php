@@ -37,7 +37,7 @@
         continue;
       }
       if (strlen(trim($_val)) > 0){
-        $where []= 'upper(' . $_key . '::varchar(64)) like upper(' . "'" . str_replace("'","''",$_val) . "')";
+        $where []= 'upper(' . $_key . '::text) like upper(' . "'" . str_replace("'","''",$_val) . "')";
       }
     }
     if (count($where)>0){
