@@ -130,7 +130,7 @@ SQL;
         filter[attr] = this.value;
         var url_params = "?";
         for(var f in filter){
-          url_params += "FILTER["+f+"]="+filter[f]+"&";
+          url_params += "FILTER["+f+"]="+encodeURIComponent(filter[f])+"&";
         }
         for(var s in sort){
           url_params += "SORT["+s+"]="+sort[s];
@@ -146,7 +146,7 @@ SQL;
         sort[attr] = ((sort[attr] === "ASC")? "DESC":"ASC");
         var url_params = "?";
         for(var f in filter){
-          url_params += "FILTER["+f+"]="+filter[f]+"&";
+          url_params += "FILTER["+f+"]="+encodeURIComponent(filter[f])+"&";
         }
         for(var s in sort){
           if(s !== attr){ continue; }
