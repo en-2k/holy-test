@@ -130,13 +130,13 @@
         $where []= "e." . $_key . '=' . $_val;
       } else if (strlen(trim($_val)) > 0){
         if(strtoupper($_key) == "DEPT"){
-          $where []= 'upper(dep.name) like upper(' . "'" . str_replace("'","''",$_val) . "')";
+          $where []= 'upper(dep.name) like upper(' . "'%" . str_replace("'","''",$_val) . "%')";
         } else if (strtoupper($_key) == "NAME"){
-          $where []= 'upper(e.name) like upper(' . "'" . str_replace("'","''",$_val) . "')";
+          $where []= 'upper(e.name) like upper(' . "'%" . str_replace("'","''",$_val) . "%')";
         } else if (strtoupper($_val) == "NULL"){
           $where []= "e." . $_key . ' IS NULL';
         } else {
-          $where []= "e." . $_key . '::varchar(255) like upper(' . "'" . str_replace("'","''",$_val) . "')";
+          $where []= "e." . $_key . '::varchar(255) like upper(' . "'%" . str_replace("'","''",$_val) . "%')";
         }
       }
     }
