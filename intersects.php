@@ -34,13 +34,13 @@
     foreach($_GET['FILTER'] as $_key => $_val){
       if (strlen(trim($_val)) > 0){
         if(strtoupper($_key) == "NM_1"){
-          $where []= 'upper(em.name) like upper(' . "'" . str_replace("'","''",$_val) . "')";
+          $where []= 'upper(em.name) like upper(' . "'%" . str_replace("'","''",$_val) . "%')";
         } else if(strtoupper($_key) == "NM_2"){
-          $where []= 'upper(v1.name) like upper(' . "'" . str_replace("'","''",$_val) . "')";
+          $where []= 'upper(v1.name) like upper(' . "'%" . str_replace("'","''",$_val) . "%')";
         } else if(strtoupper($_key) == "MIN_INTERS"){
-          $where []= '(CASE WHEN v1.d_start<v.d_start THEN v.d_start ELSE v1.d_start END)::varchar(10) like upper(' . "'" . str_replace("'","''",$_val) . "')";
+          $where []= '(CASE WHEN v1.d_start<v.d_start THEN v.d_start ELSE v1.d_start END)::varchar(10) like upper(' . "'%" . str_replace("'","''",$_val) . "%')";
         } else if(strtoupper($_key) == "DEPT"){
-          $where []= 'upper(d.name) like upper(' . "'" . str_replace("'","''",$_val) . "')";
+          $where []= 'upper(d.name) like upper(' . "'%" . str_replace("'","''",$_val) . "%')";
         }
       }
     }
