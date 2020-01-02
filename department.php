@@ -69,6 +69,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Тестове завдання</title>
+    <style>input { background-color: yellow;}</style>
   </head>
   <body>
 <p><a href="index.php">&lt; Повернутися на головну</a></p>
