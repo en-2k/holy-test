@@ -102,7 +102,7 @@
         if (strtoupper($_val) == "NULL"){
           $where []= $_key . ' IS NULL';
         } else {
-          $where []= 'upper(' . $_key . '::varchar(255)) like upper(' . "'" . str_replace("'","''",$_val) . "')";
+          $where []= 'upper(' . $_key . '::varchar(255)) like upper(' . "'%" . str_replace("'","''",$_val) . "%')";
         }
       }
     }
