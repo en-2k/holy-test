@@ -138,9 +138,9 @@
         $where []= "v." . $_key . '=' . $_val;
       } else if (strlen(trim($_val)) > 0){
         if(strtoupper($_key) == "EMPL"){
-          $where []= 'upper(emp.name) like upper(' . "'" . str_replace("'","''",$_val) . "')";
+          $where []= 'upper(emp.name) like upper(' . "'%" . str_replace("'","''",$_val) . "%')";
         } else if(strtoupper($_key) == "DEPT"){
-          $where []= 'upper(dep.name) like upper(' . "'" . str_replace("'","''",$_val) . "')";
+          $where []= 'upper(dep.name) like upper(' . "'%" . str_replace("'","''",$_val) . "%')";
         } else if (strtoupper($_val) == "NULL"){
           $where []= "v." . $_key . ' IS NULL';
         } else {
